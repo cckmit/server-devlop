@@ -1,0 +1,184 @@
+spring:
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      enabled: false
+      discovery:
+        register: true
+        instanceId: ${spring.application.name}:${server.port}:${random.int(100,999999)}
+        serviceName: ${spring.application.name}
+        healthCheckPath: /actuator/health
+        #healthCheckInterval: 15s
+        healthCheckInterval: 10s
+        ip-address: true
+      config:
+        enabled: true
+        format: YAML
+  sleuth:
+    sampler:
+      percentage: 1
+  zipkin:
+    base-url: http://localhost:7104
+  servlet:
+    multipart:
+      max-file-size: 50Mb
+      max-request-size: 50Mb
+  #kafka相关配置
+  kafka:
+    bootstrap-servers: 10.129.57.108:9092
+
+#office file converter
+jodconverter:
+  local:
+    enabled: true
+    processTimeout: 600000
+    taskExecutionTimeout: 600000
+
+logging:
+  config: classpath:logback-local.xml
+
+my:
+  minio:
+    #url: http://localhost:9000/
+    url:  http://10.129.57.108:9000/
+    shareUrl:
+    user-name: pcop
+    #    password: pcoppcop
+    password: gldcim.123
+    bucket: pcop-cim
+  temp-file:
+    path: D:\work\temp\ #上传文件临时存放路径
+  excel-file:
+    absolutePath: D:\work\excel\demo.xlsx #文件绝对路径
+  orientdb:
+    location: remote:127.0.0.1/  #pcopdev.glodon.com:2424/ #10.0.197.168/ #192.168.8.185/ #
+    account: root
+    password: wyc  #gldokok #
+    dbType: graph
+    storeMode: plocal
+    defaultPrefix:
+    discoverSpace: pcopcim
+    connectionModel: true
+    poolSize: 8
+    dataParallelCoefficient: 4
+    cacheEnable: true
+    localTimeToLiveSeconds: 0
+    localOnHeapEntrySize: 100000
+    clusterCacheEnable: false
+    clusterTimeToLiveSeconds: 0
+    clusterResourcePoolSizeMb: 512
+    clusterLocation: terracotta://127.0.0.1:9410/clustered
+    clusterDefaultResourceId: main
+    clusterShareResourceId: primary-server-resource
+  mq:
+    importCode: pcopDataImport
+    downloadCode: pcopDataDownload
+    analyticStorageCode: pcopAnalyticStorage
+    #    jobUrl: http://10.129.27.104:7113/jobs
+    importJobName: FileDataImport
+    downloadJobName: ShpFileDownload
+  default-base:
+    property-name-path: DefaultBasePropertyName.txt
+  bimface:
+    #bimface
+    appKey: NNs0cDVULMeZOITxuWFacaghYCIZysAF
+    appSecret: d2TpUdkQCkGOiU5nEG1GCpthAo4QDts3
+    apiHost: https://api.bimface.com
+    fileHost: https://file.bimface.com
+    bimfacePkgsvc: http://10.129.57.108:7332/unzipbfp
+    offlinePkgPath: D:\work\bimface\
+  object-type:
+    project: projectV1
+
+iot-host:
+  #  base-url: http://localhost
+  base-url: http://10.5.4.18:7320
+  #  realtime-alarm: ${iot-host.base-url}/real_time_alarm
+  realtime-alarm: ${iot-host.base-url}/device/{device_id}/warning
+  historical-alarm: ${iot-host.base-url}/historical_alram
+  realtime-devices-status: ${iot-host.base-url}/device/{device_id}/warningsByPage
+  saving-online-rate: ${iot-host.base-url}/streetLight/getSavingRateAndOnlineRate/{reportDate}
+  env-monitor-address: ${iot-host.base-url}/device/
+  real-time-devices-fillures: ${iot-host.base-url}/device/all
+  historical-devices-status: ${iot-host.base-url}/device/{device_id}/warningsByPage
+  single-historical-devices-warning: ${iot-host.base-url}/device/{device_id}/warningsByPage
+
+
+#iot mobgo bd连接相关配置
+iot:
+  mg-db:
+    host: 10.5.4.18
+    #    host: 192.168.1.17
+    port: 27017
+    db: admin
+    user: enno
+    #    user: root
+    pwd: gldzl123
+#    pwd: gldokok
+
+gis-host:
+  #  base-url: http://10.0.197.53:7201/glodon/3DGISServer/parser
+  base-url: http://10.129.57.118:7201/glodon/3DGISServer/parser
+  file-struct: ${gis-host.base-url}/getStruct?zipFileUrl={zipFileUrl}
+  file-record: ${gis-host.base-url}/getRecord?zipFileUrl={zipFileUrl}&targetFileName={targetFileName}&taskId={taskId}
+  spatial-query:
+    base-host: http://10.0.197.53:9201
+    circle-buffer: ${gis-host.spatial-query.base-host}/glodon/3DGISServer/place/search
+    polygon-buffer: ${gis-host.spatial-query.base-host}/glodon/3DGISServer/place/search
+    query: http://10.129.57.118:8002/query
+
+
+cim:
+  ehcache:
+    cluster-enable: true
+    terracotta-server: terracotta://localhost:9410/clustered
+    clear-cache: false
+    server-resources:
+      default: main
+      primary: primary-server-resource
+    relation-type-names: 600 #cache time to live seconds
+  kafka:
+    bim-translate-topic: bim_translate
+  bim-file-types:
+    - RVT
+    - RFA
+    - DWG
+    - DXF
+    - SKP
+    - IFC
+    - DGN
+    - OBJ
+    - STL
+    - 3DS
+    - DAE
+    - PLY
+    - IGMS
+    - BMV
+  office-file-types:
+    - PPT
+    - PPTX
+    - DOC
+    - DOCX
+    - XLSX
+    - XLS
+  graph-analysis:
+    #    additional-object-types: UPNetwork_JS_JSFMJ_Point, UPNetwork_JS_JSFMJ_Point
+    additional-object-types: UPNetwork_JS_JSFMJ_Point
+
+
+sso:
+  auth:
+    clientId: master-data-web
+    clientSecret: master-data-web-secret
+    redirectUri: https://gdc-dev.glodon.com/master-data-web/
+    oauthAuthorize: https://gdc-dev.glodon.com/auth/oauth/authorize
+    accessTokenUri: https://gdc-dev.glodon.com/auth/oauth/token
+    checkTokenUri: https://gdc-dev.glodon.com/auth/oauth/check_token
+    userInfoUri: https://gdc-dev.glodon.com/auth/users/current
+
+security:
+  oauth2:
+    resource:
+      userInfoUri: https://gdc-dev.glodon.com/auth/users/current
+      preferTokenInfo: false

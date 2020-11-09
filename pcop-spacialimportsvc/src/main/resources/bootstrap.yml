@@ -1,0 +1,241 @@
+server:
+  port: 7114
+spring:
+  profiles:
+    active: dev        #dev开发环境,test测试环境,prod生产环境
+  application:
+    name: pcop-spacialimportsvc
+  config:
+    enabled: false
+  messages:
+    basename: i18n/messages
+    cache-seconds: 3600
+    encoding: UTF-8
+  kafka:
+    consumer:
+      auto-offset-reset: latest
+      enable-auto-commit: true
+      #key-value序列化反序列化
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      max-poll-records: 1
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      batch-size: 65536
+      buffer-memory: 524288
+
+glodon:
+  slogan: One Glodon, One Dream.
+  copyright:
+    version: v0.1
+    sysname: PCOP Spacial Import Server
+    website: www.glodon.com
+ribbon:
+  ReadTimeout: 900000
+  ConnectTimeout: 900000
+---
+spring:
+  profiles: dev
+  cloud:
+    consul:
+      host: 10.129.57.89
+      port: 8500
+      enabled: true
+      discovery:
+        register: true
+        instanceId: ${spring.application.name}:${server.port}:${random.int(100,999999)}
+        serviceName: ${spring.application.name}
+        healthCheckPath: /actuator/health
+        healthCheckInterval: 15s
+      config:
+        enabled: true
+        format: YAML
+    stream:
+      bindings:
+        pcopDataImportInput:
+          destination: pcopDataImport
+          #group: jobSync
+          group: jobSync2
+        pcopDataCmdOutput:
+          destination: pcopDataCmd
+      default-binder: rabbit
+  rabbitmq:
+    host: 10.129.57.115
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+  sleuth:
+    sampler:
+      percentage: 1
+  zipkin:
+    base-url: http://10.129.57.117:7104
+  #kafka相关配置
+  kafka:
+    bootstrap-servers: 10.129.57.108:9092
+    #设置一个默认组
+    consumer:
+      group-id: defaultGroup
+
+logging:
+  config: classpath:logback.xml
+
+my:
+  minio:
+#    url: http://10.129.57.108:9000/
+    url: http://10.0.204.223:9000/
+    user-name: pcop
+    password: gldcim.123
+    bucket: pcop-cim
+  temp-file:
+    path: ./temp/ #上传文件临时存放路径
+  orientdb:
+    location: remote:10.0.197.168/
+    account: root
+    password: wyc
+    dbType: graph
+    storeMode: plocal
+    defaultPrefix:
+    discoverSpace: pcopcim
+    connectionModel: true
+    cacheEnable: true
+    localTimeToLiveSeconds: 0
+    localOnHeapEntrySize : 100000
+    clusterCacheEnable: false
+    clusterTimeToLiveSeconds: 0
+    clusterResourcePoolSizeMb: 512
+    clusterLocation: terracotta://10.129.57.108:9410/clustered
+    clusterDefaultResourceId: main
+    clusterShareResourceId: primary-server-resource
+    poolSize: 10
+    dataParallelCoefficient: 4
+  shp-parser: v2
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+cim:
+  bimface:
+    translate-status:
+      interval: 180000
+    client:
+#      appKey: NNs0cDVULMeZOITxuWFacaghYCIZysAF
+#      appSecret: d2TpUdkQCkGOiU5nEG1GCpthAo4QDts3
+      appKey: r8nUtNUgU0DXNJ3Jt5bqtFlp2Fq2049e
+      appSecret: wFrGrBReX2Um2G5S6uv1G0ay78KBkWZC
+      apiHost: https://api.bimface.com
+      fileHost: https://file.bimface.com
+    translate-config: gl,true
+  kafka:
+    topic:
+      bim-translate: bim_translate
+      gis-data: gis_data
+      gis-status: gis_status
+      excel-data: excel_data
+      excel-status: excel_status
+
+---
+spring:
+  profiles: local
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      enabled: true
+      discovery:
+        register: true
+        instanceId: ${spring.application.name}:${server.port}:${random.int(100,999999)}
+        serviceName: ${spring.application.name}
+        healthCheckPath: /actuator/health
+        healthCheckInterval: 15s
+      config:
+        enabled: true
+        format: YAML
+    stream:
+      bindings:
+        pcopDataImportInput:
+          destination: pcopDataImport
+          #group: jobSync
+          group: jobSync2
+        pcopDataCmdOutput:
+          destination: pcopDataCmd
+      default-binder: rabbit
+  rabbitmq:
+    host: 10.129.57.115
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+  sleuth:
+    sampler:
+      percentage: 1
+  zipkin:
+    base-url: http://localhost:7104
+  #kafka相关配置
+  kafka:
+    bootstrap-servers: 10.129.57.108:9092
+    #设置一个默认组
+    consumer:
+      group-id: defaultGroup
+
+logging:
+  config: classpath:logback-local.xml
+
+my:
+  minio:
+#    url: http://10.129.57.108:9000/
+    url: http://10.0.204.223:9000/
+    user-name: pcop
+    password: gldcim.123
+    bucket: pcop-cim
+  temp-file:
+    path: D:\work\temp\ #上传文件临时存放路径
+  orientdb:
+    location: remote:10.0.197.168/
+    account: root
+    password: wyc
+    dbType: graph
+    storeMode: plocal
+    defaultPrefix:
+    discoverSpace: pcopcim
+    connectionModel: true
+#    clusterEnable: false
+#    clusterLocation: terracotta://10.129.57.108:9410/clustered
+#    clusterDefaultResourceId: main
+#    clusterShareResourceId: primary-server-resource
+  shp-parser: v2
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+cim:
+  bimface:
+    translate-status:
+      interval: 180000
+    client:
+#      appKey: NNs0cDVULMeZOITxuWFacaghYCIZysAF
+#      appSecret: d2TpUdkQCkGOiU5nEG1GCpthAo4QDts3
+      appKey: r8nUtNUgU0DXNJ3Jt5bqtFlp2Fq2049e
+      appSecret: wFrGrBReX2Um2G5S6uv1G0ay78KBkWZC
+      apiHost: https://api.bimface.com
+      fileHost: https://file.bimface.com
+    translate-config: gl,true
+  kafka:
+    topic:
+      bim-translate: bim_translate
+      gis-data: gis_data
+      gis-status: gis_status
+      excel-data: excel_data
+      excel-status: excel_status

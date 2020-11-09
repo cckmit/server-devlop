@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.glodon</groupId>
+	<artifactId>pcop-cim-server</artifactId>
+	<version>0.0.3</version>
+	<packaging>pom</packaging>
+	<name>PCOP CIM Data Server</name>
+	<description>The services of PCOP CIM Data</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.0.2.RELEASE</version>
+		<relativePath />
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<docker-maven-plugin.version>1.0.0</docker-maven-plugin.version>
+		<jenkins.buildnum>1</jenkins.buildnum>
+		<spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
+		<springfox-swagger.version>2.9.2</springfox-swagger.version>
+		<docker.repostory>packages.glodon.com/docker-pcop-releases</docker.repostory>
+		<docker.registry.name>pcop</docker.registry.name>
+		<docker.image.prefix>cim</docker.image.prefix>
+	</properties>
+
+	<modules>
+		<module>pcop-cimcommon</module>
+		<module>pcop-cimsvc</module>
+		<module>pcop-cimapi</module>
+		<module>pcop-cimclt</module>
+		<module>cim-init</module>
+		<module>pcop-spacialimportsvc</module>
+		<module>pcop-cimstatsvc</module>
+		<module>pcop-weasvc</module>
+	</modules>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<distributionManagement>
+		<repository>
+			<id>central</id>
+			<name>packages-releases</name>
+			<url>http://packages.glodon.com/artifactory/maven-pcop-releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>packages-snapshots</name>
+			<url>http://packages.glodon.com/artifactory/maven-pcop-snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>

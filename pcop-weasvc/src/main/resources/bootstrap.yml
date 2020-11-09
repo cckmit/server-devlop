@@ -1,0 +1,119 @@
+server:
+  port: 7121
+spring:
+  profiles:
+    active: dev        #dev开发环境,test测试环境,prod生产环境
+  application:
+    name: pcop-weasvc
+  config:
+    enabled: false
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+    cache-duration:
+  jackson:
+#    date-format: yyyy-MM-dd HH:mm:ss
+#    time-zone: GMT+8
+    serialization:
+      write-dates-as-timestamps: true
+glodon:
+  slogan: One Glodon, One Dream.
+  copyright:
+    version: v0.1
+    sysname: PCOP Weather Data Server
+    website: www.glodon.com
+---
+spring:
+  profiles: dev
+  cloud:
+    consul:
+      host: 10.129.57.89
+      port: 8500
+      enabled: true
+      discovery:
+        register: true
+        instanceId: ${spring.application.name}:${server.port}:${random.int(100,999999)}
+        serviceName: ${spring.application.name}
+        healthCheckPath: /actuator/health
+        #healthCheckInterval: 15s
+        healthCheckInterval: 10s
+        ip-address: true
+      config:
+        enabled: true
+        format: YAML
+  sleuth:
+    sampler:
+       percentage: 1
+  zipkin:
+    base-url: http://10.129.57.117:7104
+logging:
+  config: classpath:logback.xml
+my:
+  orientdb:
+#    location: remote:10.129.27.104/
+#    location: remote:10.129.57.118/
+    location: remote:10.0.197.168/
+    account: root
+    password: wyc
+    dbType: graph
+    storeMode: plocal
+    defaultPrefix:
+#    discoverSpace: test
+    discoverSpace: pcopcim
+    connectionModel: true
+    cacheEnable: true
+    localTimeToLiveSeconds: 0
+    localOnHeapEntrySize : 100000
+    clusterCacheEnable: true
+    clusterTimeToLiveSeconds: 0
+    clusterResourcePoolSizeMb: 512
+    clusterLocation: terracotta://10.129.57.108:9410/clustered
+    clusterDefaultResourceId: main
+    clusterShareResourceId: primary-server-resource
+---
+spring:
+  profiles: local
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      enabled: true
+      discovery:
+        register: true
+        instanceId: ${spring.application.name}:${server.port}:${random.int(100,999999)}
+        serviceName: ${spring.application.name}
+        healthCheckPath: /actuator/health
+        #healthCheckInterval: 15s
+        healthCheckInterval: 10s
+        ip-address: true
+      config:
+        enabled: true
+        format: YAML
+  sleuth:
+    sampler:
+       percentage: 1
+  zipkin:
+    base-url: http://localhost:7104
+logging:
+  config: classpath:logback-local.xml
+my:
+  orientdb:
+#    location: remote:10.129.27.104/
+    location: remote:10.129.57.118/
+    account: root
+    password: wyc
+    dbType: graph
+    storeMode: plocal
+    defaultPrefix:
+#    discoverSpace: test
+    discoverSpace: pcopcim
+    connectionModel: true
+    cacheEnable: true
+    localTimeToLiveSeconds: 0
+    localOnHeapEntrySize : 100000
+    clusterCacheEnable: true
+    clusterTimeToLiveSeconds: 0
+    clusterResourcePoolSizeMb: 512
+    clusterLocation: terracotta://10.129.57.108:9410/clustered
+    clusterDefaultResourceId: main
+    clusterShareResourceId: primary-server-resource

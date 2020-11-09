@@ -1,0 +1,20 @@
+
+logging:
+  config: classpath:logback.xml
+
+
+my:
+  orientdb:
+    location: remote:10.125.70.137/
+#    location: remote:10.2.23.57/
+    account: root
+    password: wyc
+    dbType: graph
+    storeMode: plocal
+    defaultPrefix:
+    discoverSpace: gdc
+    connectionModel: true
+    poolSize: 10
+    dataParallelCoefficient: 4
+  signKey: gyPscHZoGVTGYfOu
+#  initConfigFileLocation: /opt/module/jar/CIM_INIT_CONFIG.xlsx

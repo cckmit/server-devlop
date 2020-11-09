@@ -1,0 +1,43 @@
+server:
+  port: 7109
+spring:
+  profiles:
+    active: local     #dev开发环境,test测试环境, prod生产环境
+  application:
+    name: pcop-cimsvc
+  config:
+    enabled: false
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+    cache-duration:
+  cache:
+    type: jcache
+  jackson:
+    #    date-format: yyyy-MM-dd HH:mm:ss
+    #    time-zone: GMT+8
+#    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: true
+  #kafka相关配置
+  kafka:
+    consumer:
+      group-id: defaultGroup
+      #key-value序列化反序列化
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      batch-size: 65536
+      buffer-memory: 524288
+
+glodon:
+  slogan: One Glodon, One Dream.
+  copyright:
+    version: v0.1
+    sysname: PCOP CIM Data Server
+    website: www.glodon.com
+ribbon:
+  ReadTimeout: 900000
+  ConnectTimeout: 900000
